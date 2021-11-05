@@ -1,29 +1,24 @@
-import { QueueMapper } from '../mapper/queue.mapper';
 import { QueueRepository } from '../queue.repository';
 import { AppointmentEntity } from '../entities/appointment.entity';
 import { AppointmentDto } from '../dto/appointment.dto';
-import { IAppointment } from '../interfaces/appointment.interface';
+import { Inject, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AddPatientInQueue {
   constructor(
-    private readonly mapper: QueueMapper,
-    private readonly repository: QueueRepository,
-    private readonly entity: AppointmentEntity,
+    @Inject('REDIS_REPOSITORY') private readonly repository: QueueRepository,
   ) {}
 
   async addPatientInQueue(
     createAppointmentDto: AppointmentDto,
   ): Promise<number> {
     const appointmentEntity: AppointmentEntity =
-      this.entity.create(createAppointmentDto);
-    const appointmentRow: IAppointment = this.mapper.toRow(appointmentEntity);
-    await this.repository.addPatientInQueue(
-      appointmentRow.doctor_id,
-      appointmentRow.patient_id,
-    );
-    const total: string[] = await this.repository.getAllPatientsFromQueue(
-      appointmentRow.doctor_id,
-    );
+      AppointmentEntity.create(createAppointmentDto);
+    await this.repository.addPatientInQueue(appointmentEntity);
+    const total: AppointmentEntity[] =
+      await this.repository.getAllPatientsFromQueue(
+        appointmentEntity.getDoctorID,
+      );
     return total.length;
   }
 }
