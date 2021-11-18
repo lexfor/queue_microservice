@@ -8,9 +8,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QueueMapper } from './mapper/queue.mapper';
 import { QueueRepository } from './queue.repository';
 import { JwtStrategy } from '../../infrastructure/strategies/jwt.strategy';
+import config from '../../infrastructure/config';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot({
+      load: [config],
+    }),
+  ],
   controllers: [QueueController],
   providers: [
     {
