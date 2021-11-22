@@ -41,7 +41,7 @@ export class QueueController implements OnModuleInit {
   @Client({
     transport: Transport.GRPC,
     options: {
-      url: 'ec2-18-217-138-210.us-east-2.compute.amazonaws.com:3001',
+      url: process.env.USERS_MICROSERVICE_GRPC,
       package: 'lab',
       protoPath: join(__dirname, '../../../grpc/grpc.proto'),
     },
