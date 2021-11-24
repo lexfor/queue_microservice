@@ -5,7 +5,7 @@ import {
   HealthCheckError,
 } from '@nestjs/terminus';
 import { promisify } from 'util';
-import { sendMessage } from '../sendMessage';
+import { sendMessage } from '../aws/sendMessage';
 
 @Injectable()
 export class RedisHealthIndicator extends HealthIndicator {
