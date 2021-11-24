@@ -5,6 +5,7 @@ import {
   HealthCheckError,
 } from '@nestjs/terminus';
 import { promisify } from 'util';
+import { sendMessage } from '../sendMessage';
 
 @Injectable()
 export class RedisHealthIndicator extends HealthIndicator {
@@ -20,6 +21,7 @@ export class RedisHealthIndicator extends HealthIndicator {
     if (isHealthy) {
       return result;
     }
+    await sendMessage('Redis from queue microservice not available');
     throw new HealthCheckError('redis server failed', result);
   }
 }
